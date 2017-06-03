@@ -318,7 +318,7 @@ def AutoencoderRunner():
 			print("Epoch:", '%04d'%(epoch+1), "cost=","{:.9f}".format(avg_cost))
 	print("Total cost: " + str(autoencoder.calc_total_cost(X_test)))
 
-AutoencoderRunner()
+
 
 '''
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
@@ -373,19 +373,160 @@ Total cost: 1.13131e+06
 
 
 
-
 # AdditiveGaussianNoiseAutoencoderRunner.py
 
+def AdditiveGaussianNoiseAutoencoderRunner():
+	mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
+
+	def standard_scale(X_train, X_test):
+		preprocessor = prep.StandardScaler().fit(X_train)
+		X_train = preprocessor.transform(X_train)
+		X_test = preprocessor.transform(X_test)
+		return X_train, X_test
+
+	def get_random_block_from_data(data, batch_size):
+		start_index = np.random.randint(0, len(data) - batch_size)
+		return data[start_index:(start_index + batch_size)]
+
+	X_train,X_test = standard_scale(mnist.train.images, mnist.test.images)
+
+	n_samples = int(mnist.train.num_examples)
+	training_epochs = 1 #20
+	batch_size = 128
+	display_step = 1
+
+	autoencoder = AdditiveGaussianNoiseAutoencoder(n_input=784, n_hidden=200, transfer_function=tf.nn.softplus, optimizer=tf.train.AdamOptimizer(learning_rate=0.001), scale=0.01)
+
+	for epoch in range(training_epochs):
+		avg_cost = 0.
+		total_batch = int(n_samples / batch_size)
+		# Loop over all batches
+		for i in range(total_batch):
+			batch_xs = get_random_block_from_data(X_train, batch_size)
+			# Fit training using batch data
+			cost = autoencoder.partial_fit(batch_xs)
+			# compute average loss
+			avg_cost += cost/n_samples*batch_size
+		# Display logs per epoch step
+		if epoch%display_step==0:
+			print("Epoch:", '%04d'%(epoch+1), "cost=","{:.9f}".format(avg_cost))
+	print("Total cost: " + str(autoencoder.calc_total_cost(X_test)))
+
+
+
+
 # MaskingNoiseAutoencoderRunner.py
+
+def MaskingNoiseAutoencoderRunner():
+	mnist = input_data.read_data_sets('MNIST_data', one_hot = True)
+
+	def standard_scale(X_train, X_test):
+		preprocessor = prep.StandardScaler().fit(X_train)
+		X_train = preprocessor.transform(X_train)
+		X_test = preprocessor.transform(X_test)
+		return X_train, X_test
+
+	def get_random_block_from_data(data, batch_size):
+		start_index = np.random.randint(0, len(data) - batch_size)
+		return data[start_index:(start_index + batch_size)]
+
+	X_train, X_test = standard_scale(mnist.train.images, mnist.test.images)
+
+	n_samples = int(mnist.train.num_examples)
+	training_epochs = 1 #100
+	batch_size = 128
+	display_step = 1
+
+	autoencoder = MaskingNoiseAutoencoder(n_input=784, n_hidden=200, transfer_function=tf.nn.softplus, optimizer=tf.train.AdamOptimizer(learning_rate=0.001), dropout_probability=0.95)
+
+	for epoch in range(training_epochs):
+		avg_cost = 0.
+		total_batch = int(n_samples / batch_size)
+		for i in range(total_batch):
+			batch_xs = get_random_block_from_data(X_train, batch_size)
+			cost = autoencoder.partial_fit(batch_xs)
+			avg_cost += cost/n_samples*batch_size
+		if epoch%display_step==0:
+			print("Epoch:", '%04d'%(epoch+1), "cost=","{:.9}".format(avg_cost))
+	print("Total cost: " + str(autoencoder.calc_total_cost(X_test)))
+
+
+
+
 # VariationAutoencoderRunner.py
 
+def VariationalAutoencoderRunner():
+	mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
+
+	def min_max_scale(X_train, X_test):
+		preprocessor = prep.MinMaxScaler().fit(X_train)
+		X_train = preprocessor.transform(X_train)
+		X_test = preprocessor.transform(X_test)
+		return X_train,X_test
+
+	def get_random_block_from_data(data, batch_size):
+		start_index = np.random.randint(0, len(data)-batch_size)
+		return data[start_index:(start_index+batch_size)]
+
+	X_train,X_test = min_max_scale(mnist.train.images, mnist.test.images)
+	n_samples = int(mnist.train.num_examples)
+	training_epochs = 1 #20
+	batch_size = 128
+	display_step = 1
+
+	autoencoder = VariationalAutoencoder(n_input=784, n_hidden=200, optimizer=tf.train.AdamOptimizer(learning_rate=0.001))
+
+	for epoch in range(training_epochs):
+		avg_cost = 0.
+		total_batch = int(n_samples/batch_size)
+		# Loop over all batches
+		for i in range(total_batch):
+			batch_xs = get_random_block_from_data(X_train, batch_size)
+			# Fit training using batch data
+			cost = autoencoder.partial_fit(batch_xs)
+			# Compute average loss
+			avg_cost += cost/n_samples*batch_size
+		# Display logs per epoch step
+		if epoch%display_step==0:
+			print("Epoch:", '%04d'%(epoch+1), "cost=","{:.9f}".format(avg_cost))
+	print("Total cost: " + str(autoencoder.calc_total_cost(X_test)))
 
 
 
 
 
 
+# ------------------------
 
+# AutoencoderRunner()
+
+#AdditiveGaussianNoiseAutoencoderRunner()
+'''
+Extracting MNIST_data/train-images-idx3-ubyte.gz
+Extracting MNIST_data/train-labels-idx1-ubyte.gz
+Extracting MNIST_data/t10k-images-idx3-ubyte.gz
+Extracting MNIST_data/t10k-labels-idx1-ubyte.gz
+2017-06-02 01:44:20.689328: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+Epoch: 0001 cost= 18688.993296591
+Total cost: 1.08278e+06
+[Finished in 34.3s]
+'''
+
+#MaskingNoiseAutoencoderRunner()
+'''
+2017-06-02 02:01:05.431119: 
+Epoch: 0001 cost= 19225.5329
+Total cost: 1.14209e+06
+[Finished in 33.5s]
+'''
+
+#VariationalAutoencoderRunner()
+'''
+2017-06-03 12:53:22.389628: 
+Epoch: 0001 cost= 1148.902823722
+Total cost: 34770.7
+[Finished in 38.1s]
+'''
 
 
 
