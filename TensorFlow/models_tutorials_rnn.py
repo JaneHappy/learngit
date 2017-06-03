@@ -107,6 +107,16 @@ def get_wmt_enfr_dev_set(directory):
 			dev_tar.extract(en_dev_file, directory)
 	return dev_paths
 
+def basic_tokenizer(sentence):
+	"""Very basic tokenizer: split the sentence into a list of tokens."""
+	words = []
+	for space_separated_fragment in sentence.strip().split():
+		words.extend(_WORD_SPLIT.split(space_separated_fragment))
+	return [w for w in words if w]
+
+def create_vocabulary(vocabulary_path, data_path, max_vocabulary_size, tokenizer=None, normalize_digits=True):
+	"""Create vocabulary file (if it does not exist yet)"""
+
 
 
 
