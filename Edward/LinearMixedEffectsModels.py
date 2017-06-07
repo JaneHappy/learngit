@@ -4,6 +4,8 @@
 # https://edward-cn.readthedocs.io/zh/latest/Tutorials/tutorials/
 # http://edwardlib.org/tutorials/linear-mixed-effects-models
 
+# http://nbviewer.jupyter.org/github/blei-lab/edward/blob/master/notebooks/linear_mixed_effects_models.ipynb
+
 
 
 from __future__ import absolute_import
@@ -35,5 +37,28 @@ test = data.drop(train.index)
 train.head()
 
 
+
+s_train = train['s'].values.astype(int)
+d_train = train['dcodes'].values.astype(int)
+dept_train = train['deptcodes'].values.astype(int)
+y_train = train['y'].values.astype(float)
+service_train = train['service'].values.astype(int)
+n_obs_train = train.shape[0]
+
+s_test = test['s'].values.astype(int)
+d_test = test['dcodes'].values.astype(int)
+dept_test = test['deptcodes'].values.astype(int)
+y_test = test['y'].values.astype(float)
+service_test = test['service'].values.astype(int)
+n_obs_test = test.shape[0]
+
+n_s = 2972  # number of students
+n_d = 1128  # number of instructors
+n_dept = 14  # number of departments
+n_obs = train.shape[0]  # number of observations
+
+
+
+# Model
 
 
