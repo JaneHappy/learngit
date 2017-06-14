@@ -3,6 +3,8 @@
 
 
 
+from __future__ import print_function
+
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
 
@@ -74,7 +76,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 sess.run(tf.initialize_all_variables())
 
-for i in range(20000):
+for i in range(200): #20000
 	batch = mnist.train.next_batch(50)
 
 	if i%100 == 0:
@@ -86,4 +88,22 @@ for i in range(20000):
 print("test accuracy %g" %(accuracy.eval(feed_dict={x:mnist.test.images, y_:mnist.test.labels, keep_prob:1.0})))
 
 
+'''
+Extracting MNIST_data/train-images-idx3-ubyte.gz
+Extracting MNIST_data/train-labels-idx1-ubyte.gz
+Extracting MNIST_data/t10k-images-idx3-ubyte.gz
+Extracting MNIST_data/t10k-labels-idx1-ubyte.gz
+2017-06-14 22:53:40.715904: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2017-06-14 22:53:41.340293: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-06-14 22:53:41.340324: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+WARNING:tensorflow:From /home/ubuntu/Program/learngit/DeepLearning/cnn_mnist.py:77: initialize_all_variables (from tensorflow.python.ops.variables) is deprecated and will be removed after 2017-03-02.
+Instructions for updating:
+Use `tf.global_variables_initializer` instead.
+step 0, training accuracy 0.08
+step 100, training accuracy 0.84
+[Finished in 180.9s with exit code -9]
+[shell_cmd: python -u "/home/ubuntu/Program/learngit/DeepLearning/cnn_mnist.py"]
+[dir: /home/ubuntu/Program/learngit/DeepLearning]
+[path: /home/ubuntu/bin:/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin]
+'''
 
