@@ -1,0 +1,4 @@
+Found 960 images belonging to 2 classes.
+Found 64 images belonging to 2 classes.
+Epoch 1/1
+1/1 [==============================] - 35s - loss: 0.6883 - acc: 0.5625 - val_loss: 3.6082 - val_acc: 0.5000
